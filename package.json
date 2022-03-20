@@ -1,0 +1,15 @@
+{
+  "private": true,
+  "scripts": {
+    "dev": "nuxi dev",
+    "build": "nuxi build",
+    "start": "node .output/server/index.mjs"
+  },
+  "devDependencies": {
+    "nuxt3": "latest",
+    "pug": "^3.0.2",
+    "pug-loader": "^2.4.0",
+    "stylus": "^0.56.0",
+    "stylus-loader": "^6.2.0"
+  }
+}
