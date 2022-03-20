@@ -14,4 +14,5 @@ And assemble into a big star !
 ```bash
 yarn install
 yarn dev
+python3 data.py server
 ```
