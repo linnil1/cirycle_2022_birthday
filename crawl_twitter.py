@@ -53,22 +53,27 @@ def query(id):
     }
 
 
-if __name__ == "__main__":
-    # load
+def updateDB():
+    """ I use json as db to keep it simple """
+    file_db = "tweets.json"
     tweets = []
+
+    # load
     start_time = None
     tweets_id = set()
-    if os.path.exists("tweets.json"):
-        tweets = json.load(open("tweets.json"))
+    if os.path.exists(db_file):
+        tweets = json.load(open(db_file))
         start_time = max(map(lambda i: i['create_at'], tweets))
         tweets_id = set(map(lambda i: i['id'], tweets))
 
     # query
     tweets_search_result = getAllTweets(start_time)
     new_tweets = [query(i.id) for i in tweets_search_result if i.id not in tweets_id]
-    print(new_tweets)
 
     # save
     tweets.extend(new_tweets)
-    print(tweets)
-    json.dump(tweets, open("tweets.json", 'w'))
+    json.dump(tweets, open(file_db, 'w'))
+
+
+if __name__ == "__main__":
+    updateDB()
