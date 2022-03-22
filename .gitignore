@@ -5,3 +5,5 @@ nuxt.d.ts
 .output
 .env
 .*.swp
+twitter_secret.py
+tweets.json
