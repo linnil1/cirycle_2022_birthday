@@ -6,7 +6,7 @@
     "start": "node .output/server/index.mjs"
   },
   "devDependencies": {
-    "nuxt3": "latest",
+    "nuxt3": "^3.0.0-27478938.fdd6a91",
     "pug": "^3.0.2",
     "pug-loader": "^2.4.0",
     "stylus": "^0.56.0",
