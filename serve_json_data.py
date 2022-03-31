@@ -5,6 +5,7 @@ import json
 import asyncio
 import datetime
 from pprint import pprint
+from aiohttp import web
 
 
 cors_header = {
@@ -52,12 +53,13 @@ async def getTweetsJsonExample(request):
     return web.json_response(data, headers=cors_header)
 
 
+async def getTweetsJson(request):
+    data = json.load(open("tweets_cirycle.json"))
+    return web.json_response(data, headers=cors_header)
+
+
 if __name__ == "__main__":
-    if sys.argv[1] == "server":
-        from aiohttp import web
-        app = web.Application()
-        # app.add_routes([web.post('/api/{tw_type}', getTweetsJson)])
-        app.add_routes([web.post('/api/tweets', getTweetsJsonExample)])
-        web.run_app(app, port=8081)
-    else:
-        print("Error")
+    app = web.Application()
+    app.add_routes([web.post('/api/tweets', getTweetsJsonExample)])
+    # app.add_routes([web.post('/api/tweets', getTweetsJson)])
+    web.run_app(app, port=8081)

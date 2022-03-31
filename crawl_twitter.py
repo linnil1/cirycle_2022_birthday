@@ -6,6 +6,10 @@ api = tweepy.Client(**secret)
 
 
 def getAllTweets(start_time=None):
+    # Start time show be less than 1 week
+    # otherwise you will get
+    # Invalid 'start_time':'2022-03-21T09:14Z'.
+    #     'start_time' must be on or after 2022-03-22T04:35Z
     tag = "#Cirycle生日快樂2022"
     next_token = None
     new_tweets = []
@@ -61,8 +65,8 @@ def updateDB():
     # load
     start_time = None
     tweets_id = set()
-    if os.path.exists(db_file):
-        tweets = json.load(open(db_file))
+    if os.path.exists(file_db):
+        tweets = json.load(open(file_db))
         start_time = max(map(lambda i: i['create_at'], tweets))
         tweets_id = set(map(lambda i: i['id'], tweets))
 
@@ -72,6 +76,7 @@ def updateDB():
 
     # save
     tweets.extend(new_tweets)
+    tweets = sorted(tweets, key=lambda i: i['created_at'])
     json.dump(tweets, open(file_db, 'w'))
 
 

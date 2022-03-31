@@ -21,6 +21,7 @@ const props = defineProps({
 
 onMounted( () => {
   console.log("Create twitter object " + props.tweetid)
+  document.querySelector("#twitter").replaceChildren();
   window.twttr.widgets.createTweet(
     props.tweetid,
     document.querySelector("#twitter"),
