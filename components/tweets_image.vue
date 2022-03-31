@@ -1,11 +1,8 @@
 <template lang="pug">
 .canvas
-  .image-container(v-for="i in data" :style='{top: i.x + "px", left: i.y + "px", "background-color": i.color}')
-    img(:src="i.image[0]" @click="clickTwitter($event,i)")
-    .tip {{ i.user_name }}
-
+  Star(:star="star" :clickTwitter="clickTwitter" v-for="star in data")
   // v-if in child component will cause error
-  template(v-if="twitter_display")
+  .lighthouse-container(v-if="twitter_display")
     Lighthouse(:tweetid="twitter_id", :hideFunc="() => (twitter_display = false)")
 </template>
 
@@ -39,10 +36,10 @@ onMounted(() => {
 let twitter_id = ref(""),
     twitter_display = ref(false);
 
-function clickTwitter(evt, i) {
-  console.log("Click", i, twitter_ref)
+function clickTwitter(evt, star) {
+  twitter_id.value = star.twitter_id.toString()
   twitter_display.value = true
-  twitter_id.value = i.twitter
+  console.log(twitter_id)
 }
 
 let { data } = await useFetch("/api/tweets")
@@ -53,36 +50,9 @@ let { data } = await useFetch("/api/tweets")
 .canvas
   position: relative
 
-.image-container
-  box-sizing: border-box
-  position: absolute
-  width: 50px 
-  height: 50px 
-  overflow: hidden
-  display: flex
-  justify-content: center
-
-  .tip
-    visibility: hidden
-    position: absolute
-    width: 100%
-    top: 40%
-    text-align: center
-    text-weight: 600
-    color: white
-    text-shadow: black 0 0 5px
-
-  img
-    max-height: 100%
-    width: auto
-    opacity: 30%
-
-  &:hover
-    border: 0px solid
-    .tip 
-      visibility: visible
-
-.twitter
-  display: none
+.lighthouse-container
+  position: fixed
+  top: 0px
+  left: 0px
 </style>
 
