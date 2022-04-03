@@ -59,7 +59,7 @@ wrangler kv:namespace create cirycle_2022_birthday
 wrangler kv:key put --namespace-id=b90dbe1acf46420f908611387f0bcd08 xx.png --path ./xx.png
 # upload json
 wrangler kv:key put --namespace-id=b90dbe1acf46420f908611387f0bcd08 tweets_cirycle.json --path ./tweets_cirycle.json
-# publish
+# publish the web
 wrangler publish
 ```
 

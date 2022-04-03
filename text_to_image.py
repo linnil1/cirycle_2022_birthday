@@ -30,7 +30,8 @@ def word2Img(tweet_text):
 
     # draw text on the center of image
     text = "\n".join(texts)
-    d.multiline_text((60, H // 2), text, (255,255,255), anchor="lm", font=font)
+    d.multiline_text((60, H // 2), text, (255, 255, 255),
+                     anchor="lm", font=font)
     return newim
 
 
@@ -39,7 +40,7 @@ def plotImgs(imgs):
     import plotly.express as px
     app = Dash(__name__)
     app.layout = html.Div(children=[
-        dcc.Graph( figure=px.imshow(img, width=800, height=800) ) for img in imgs
+        dcc.Graph(figure=px.imshow(img, width=800, height=800)) for img in imgs
     ])
     app.run_server(port=3001, debug=True)
 

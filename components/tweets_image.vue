@@ -28,9 +28,6 @@ let data = ref([
   twitter_id: "1504516744739962880"
 },
 ])
-onMounted(() => {
-  console.log(data)
-})
 */
 
 let twitter_id = ref(""),
@@ -47,6 +44,7 @@ let scale = ref(1)
 let total_height = ref(0)
 
 onMounted( () => {
+  // get the width and height of the star
   let total_width_min = 1000,
       total_width_max = 0
   data.value.forEach( (i) => {
@@ -58,6 +56,7 @@ onMounted( () => {
       total_width_max = i.y + i.width
   })
 
+  // scale it if it can (maybe scale down)
   const width_scale = (window.innerWidth - 100) / (total_width_max - total_width_min)
   const height_scale = (window.innerHeight - 100) / total_height.value
   scale.value = Math.min(width_scale, height_scale)

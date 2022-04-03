@@ -1,12 +1,12 @@
+import os
+import json
+import asyncio
+from pprint import pprint
+from PIL import Image
+import aiohttp
+
 from text_to_image import word2Img
 from crawl_twitter import updateDB
-from pprint import pprint
-import os
-from PIL import Image 
-import aiohttp
-import asyncio
-import json
-
 
 image_folder = "data1"
 file_db = "tweets.json"
@@ -27,19 +27,37 @@ W, H = 50, 50
 W_full, H_full = 1000, 1000
 N = 1000 // 50
 
+star_style = [  # total 55
+    # (number of column in this row, row color)
+    (1, 0),
+    (1, 0),
+    (1, 1),
+    (3, 1),
+    (3, 1),
+    (5, 2),
+    (7, 2),
+    (13, 3),
+    (7, 4),
+    (5, 4),
+    (3, 5),
+    (3, 5),
+    (1, 5),
+    (1, 6),
+    (1, 6),
+]
+
 
 async def downloadImage(url, path):
     async with aiohttp.ClientSession() as session:
         async with session.get(url) as resp:
-           if resp.status == 200:
-               with open(path, "wb") as f:
-                   f.write(await resp.read())
+            if resp.status == 200:
+                with open(path, "wb") as f:
+                    f.write(await resp.read())
 
 
-def saveImgs():
+def assignImageToTweet(tweets):
     # download or create image
     os.makedirs(image_folder, exist_ok=True)
-    tweets = json.load(open(file_db))
     for tweet in tweets:
         tweet['is_new'] = False
         # with image -> download and resize
@@ -83,26 +101,6 @@ def uploadImgs(tweets):
                 f"{name} --path {image_folder}/{name}")
 
 
-star_style = [
-    # (number of column in this row, row color)
-    (1, 0),
-    (1, 0),
-    (1, 1),
-    (3, 1),
-    (3, 1),
-    (5, 2),
-    (7, 2),
-    (13, 3),
-    (7, 4),
-    (5, 4),
-    (3, 5),
-    (3, 5),
-    (1, 5),
-    (1, 6),
-    (1, 6),
-]
-
-
 def index_to_pos_color(i):
     center_pos = W_full // 2 - W // 2
     acc = 0
@@ -128,33 +126,36 @@ def index_to_pos_color(i):
     }
 
 
-def saveCirycleDB(tweets):
+def assignPosColorToTweet(tweets):
     # transfer to new format
     i = 0
     tweets_simple_format = []
     for tweet in tweets:
-        # promotion tweets
+        if i >= 55:
+            continue
+        # Exclude promotion tweets
+        # Total tweets: 55. It's enough to fit the star
         if tweet['id'] in [1505113558618546176, 1505113563400060929,
                            1510065128787812352, 1507465729796620289]:
             continue
         # main
         tweets_simple_format.append({
             'twitter_id': str(tweet['id']),
-            # 'url': tweet['url'],
             'user_name': tweet['user_name'],
-            # 'user_image': tweet['user_image'],
-            # 'text': tweet['text'],
             'image': tweet['my_img_file'].replace(image_folder, url),
             **index_to_pos_color(i)
         })
         i += 1
-    pprint(tweets_simple_format)
-    json.dump(tweets_simple_format, open(file_cirycle_db, "w"))
+    return tweets_simple_format
 
 
 if __name__ == "__main__":
-    # updateDB()
-    tweets = saveImgs()
-    saveCirycleDB(tweets)
+    updateDB()
+    tweets = json.load(open(file_db))
+    tweets = assignImageToTweet(tweets)
+    tweets_star = assignPosColorToTweet(tweets)
+    pprint(tweets_star)
+    json.dump(tweets_star, open(file_cirycle_db, "w"))
     uploadImgs(tweets)
-    run(f"wrangler kv:key put --namespace-id=b90dbe1acf46420f908611387f0bcd08 tweets_cirycle.json --path tweets_cirycle.json")
+    run("wrangler kv:key put --namespace-id=b90dbe1acf46420f908611387f0bcd08 "
+        " tweets_cirycle.json --path tweets_cirycle.json")

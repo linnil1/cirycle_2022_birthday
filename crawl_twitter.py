@@ -39,11 +39,13 @@ def getAllTweets(start_time=None):
 
 def query(id):
     # query tweet's information
-    data = api.get_tweet(id,
+    data = api.get_tweet(
+        id,
         expansions=["author_id", "attachments.media_keys"],
         user_fields=["profile_image_url"],
         tweet_fields=["created_at", "entities"],
-        media_fields=["url", "preview_image_url"])
+        media_fields=["url", "preview_image_url"]
+    )
 
     return {
         'id': id,

@@ -21,9 +21,6 @@
 </template>
 
 <script setup>
-import { onMounted } from 'vue'
-
-// onMounted( () => {
 function playMusic() {
   let audio = document.querySelector("#audio")
   if (audio.paused) {
@@ -32,7 +29,6 @@ function playMusic() {
       document.querySelector("#audio").play()
   }
 }
-
 </script>
 
 <style lang="stylus">
@@ -86,4 +82,6 @@ function playMusic() {
       color: white
       p
         margin: 2px
+      @media only screen and (max-width: 700px)
+        font-size: 12px
 </style>
