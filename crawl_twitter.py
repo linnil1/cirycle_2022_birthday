@@ -76,7 +76,7 @@ def updateDB():
 
     # save
     tweets.extend(new_tweets)
-    tweets = sorted(tweets, key=lambda i: i['created_at'])
+    # tweets = sorted(tweets, key=lambda i: i['created_at'])
     json.dump(tweets, open(file_db, 'w'))
 
 

@@ -6,7 +6,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { onMounted } from 'vue'
 
 const props = defineProps({
   'tweetid': {
@@ -59,5 +59,8 @@ onMounted( () => {
 
 .embed-twitter
   width: 400px
+  overflow: hidden
+  @media only screen and (max-width: 500px)
+      width: 80vw
 
 </style>
