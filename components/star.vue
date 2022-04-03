@@ -1,5 +1,5 @@
 <template lang="pug">
-.image-container(:style='{top: star.x + "px", left: star.y + "px", "background-color": star.color}')
+.image-container(:style='{top: star.x * scale + "px", left: 500 + (star.y - 500) * scale + "px", "background-color": star.color, "width": star.width * scale + "px", "height": star.height * scale + "px"}')
   img(:src="star.image" @click="clickTwitter($event, star)")
   .tip-container
     .tip(@click="clickTwitter($event, star)") {{ star.user_name }}
@@ -15,6 +15,10 @@ const props = defineProps({
     type: Function,
     required: true,
   },
+  'scale': {
+    type: Number,
+    required: true,
+  },
 })
 </script>
 
@@ -22,8 +26,6 @@ const props = defineProps({
 .image-container
   box-sizing: border-box
   position: absolute
-  width: 50px 
-  height: 50px 
   overflow: hidden
   display: flex
   justify-content: center

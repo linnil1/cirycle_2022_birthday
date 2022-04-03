@@ -75,9 +75,10 @@ function playMusic() {
     .tweetsimage
       margin-top: 100px
       margin-bottom: 100px
-      width: 1000px
-      height: 1000px
-      border: solid 1px white
+      // width and height written in tweetsimage
+      // width: 1000px
+      // height: 800px
+      // border: solid 1px white
 
     .staff
       bottom: 20px

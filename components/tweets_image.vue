@@ -1,6 +1,6 @@
 <template lang="pug">
-.canvas
-  Star(:star="star" :clickTwitter="clickTwitter" v-for="star in data")
+.canvas(:style='{height: total_height + "px"}')
+  Star(:star="star" :clickTwitter="clickTwitter" v-for="star in data" :scale="scale")
   // v-if in child component will cause error
   .lighthouse-container(v-if="twitter_display")
     Lighthouse(:tweetid="twitter_id", :hideFunc="() => (twitter_display = false)")
@@ -43,12 +43,34 @@ function clickTwitter(evt, star) {
 }
 
 let { data } = await useFetch("/api/tweets")
+let scale = ref(1)
+let total_height = ref(0)
+
+onMounted( () => {
+  let total_width_min = 1000,
+      total_width_max = 0
+  data.value.forEach( (i) => {
+    if (i.height + i.x > total_height.value)
+      total_height.value = i.height + i.x
+    if (i.y < total_width_min)
+      total_width_min = i.y
+    if (i.y + i.width > total_width_max)
+      total_width_max = i.y + i.width
+  })
+
+  const width_scale = (window.innerWidth - 100) / (total_width_max - total_width_min)
+  const height_scale = (window.innerHeight - 100) / total_height.value
+  scale.value = Math.min(width_scale, height_scale)
+  console.log("Set scale", scale.value)
+  total_height.value = total_height.value * scale.value
+})
 
 </script>
 
 <style lang="stylus">
 .canvas
   position: relative
+  width: 1000px
 
 .lighthouse-container
   position: fixed

@@ -41,22 +41,28 @@ def saveImgs():
     os.makedirs(image_folder, exist_ok=True)
     tweets = json.load(open(file_db))
     for tweet in tweets:
-        # no image -> word as imge
-        if not tweet['image']:
-            file_img = f"{image_folder}/{tweet['id']}.jpg"
-            if not os.path.exists(file_img):
-                img = word2Img(tweet['text'])
-                img.save(file_img)
-            else:
-                img = Image.open(file_img)
+        tweet['is_new'] = False
         # with image -> download and resize
-        else:
+        if tweet['image']:
             file_img = image_folder + "/" + tweet['image'][0].split("/")[-1]
+            # donwload
             if not os.path.exists(file_img):
+                tweet['is_new'] = True
                 asyncio.run(downloadImage(tweet['image'][0], file_img))
-            img = Image.open(file_img).convert('RGB')
-            file_img = f"{image_folder}/{tweet['id']}.jpg"
-            img.save(file_img, quality=90)
+
+                # set to lower quality
+                img = Image.open(file_img).convert('RGB')
+                file_img = f"{image_folder}/{tweet['id']}.jpg"
+                img.save(file_img, quality=90)
+
+        file_img = f"{image_folder}/{tweet['id']}.jpg"
+        # no image -> word as imge
+        if not os.path.exists(file_img):
+            img = word2Img(tweet['text'])
+            img.save(file_img)
+            tweet['is_new'] = True
+        else:
+            img = Image.open(file_img)
 
         tweet['my_img_file'] = file_img
         tweet['my_img'] = img
@@ -70,8 +76,56 @@ def run(cmd):
 
 def uploadImgs(tweets):
     for tweet in tweets:
-        name = tweet['my_img_file'].split("/")[-1]
-        run(f"wrangler kv:key put --namespace-id=b90dbe1acf46420f908611387f0bcd08 {name} --path {image_folder}/{name}")
+        if tweet['is_new']:
+            name = tweet['my_img_file'].split("/")[-1]
+            run("wrangler kv:key put "
+                "--namespace-id=b90dbe1acf46420f908611387f0bcd08 "
+                f"{name} --path {image_folder}/{name}")
+
+
+star_style = [
+    # (number of column in this row, row color)
+    (1, 0),
+    (1, 0),
+    (1, 1),
+    (3, 1),
+    (3, 1),
+    (5, 2),
+    (7, 2),
+    (13, 3),
+    (7, 4),
+    (5, 4),
+    (3, 5),
+    (3, 5),
+    (1, 5),
+    (1, 6),
+    (1, 6),
+]
+
+
+def index_to_pos_color(i):
+    center_pos = W_full // 2 - W // 2
+    acc = 0
+    for h, s in enumerate(star_style):
+        if i < acc + s[0]:
+            return {
+                'color': colors[s[1]],
+                'x': h * H,  # height
+                'y': (i - acc - s[0] // 2) * W + center_pos,  # width
+                'width': W,
+                'height': H,
+            }
+        else:
+            acc += s[0]
+
+    # list style
+    return {
+        'color': colors[i % 7].replace("rgb", "rgba").replace(")", ", 0.5)"),
+        'x': (i // N) * W,  # height
+        'y': (i % N) * H,  # width
+        'width': W,
+        'height': H,
+    }
 
 
 def saveCirycleDB(tweets):
@@ -79,6 +133,11 @@ def saveCirycleDB(tweets):
     i = 0
     tweets_simple_format = []
     for tweet in tweets:
+        # promotion tweets
+        if tweet['id'] in [1505113558618546176, 1505113563400060929,
+                           1510065128787812352, 1507465729796620289]:
+            continue
+        # main
         tweets_simple_format.append({
             'twitter_id': str(tweet['id']),
             # 'url': tweet['url'],
@@ -86,9 +145,7 @@ def saveCirycleDB(tweets):
             # 'user_image': tweet['user_image'],
             # 'text': tweet['text'],
             'image': tweet['my_img_file'].replace(image_folder, url),
-            'color': colors[i % 7].replace("rgb", "rgba").replace(")", ", 0.5)"),
-            'x': (i // N) * W,  # height
-            'y': (i  % N) * H,  # width
+            **index_to_pos_color(i)
         })
         i += 1
     pprint(tweets_simple_format)
