@@ -32,6 +32,7 @@ star_style = [  # total 55
     (1, 0),
     (1, 0),
     (1, 0),
+    (1, 0),
     (1, 1),
     (1, 1),
     (3, 1),
@@ -47,6 +48,7 @@ star_style = [  # total 55
     (3, 5),
     (1, 5),
     (1, 5),
+    (1, 6),
     (1, 6),
     (1, 6),
     (1, 6),
@@ -145,7 +147,7 @@ def assignPosColorToTweet(tweets):
             continue
         # Exclude promotion tweets
         # Total tweets: 55. It's enough to fit the star
-        if tweet['id'] in [1505113558618546176, 1505113563400060929,
+        if tweet['id'] in [1505113563400060929,
                            1510065128787812352, 1507465729796620289]:
             continue
         # main

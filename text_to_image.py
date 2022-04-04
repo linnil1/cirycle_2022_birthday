@@ -5,7 +5,7 @@ from PIL import Image, ImageFont, ImageDraw
 def word2Img(tweet_text):
     # init
     W, H = 640, 640
-    font = ImageFont.truetype('./data/NotoSansTC-Regular.otf', 30)
+    font = ImageFont.truetype('./data1/NotoSansTC-Regular.otf', 30)
     newim = Image.new(mode="RGB", size=(W, H))
     d = ImageDraw.Draw(newim)
 

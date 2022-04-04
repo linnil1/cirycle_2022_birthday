@@ -1,11 +1,11 @@
 <template lang="pug">
 .main(@mouseover="playMusic" @touchemove="playMusic")
-  Title 易碎組 Easily Broken
+  Title ★Cirycle生日快樂！★
   Meta(charset='utf-8')
   Meta(name='viewport'            content='width=device-width, initial-scale=1')
   Meta(name='twitter:card'        content='summary_large_image')
   Meta(name='twitter:site'        content='https://cirycle-2022-birthday.linnil1.me')
-  Meta(name='twitter:title'       content='Cirycle 2022 生日快樂')
+  Meta(name='twitter:title'       content='★Cirycle生日快樂！★')
   Meta(name='twitter:description' content='2022/4/4 大宇宙彩星市電波星人Cirycle慶生企劃，來自彩虹獨角獸的虹彩祝福！')
   Meta(name='twitter:image'       content='https://cirycle-2022-birthday.linnil1.me/_nuxt/assets/CI_foreground_low.webp')
   img.full_screen(src="~/assets/CI_foreground_low.webp")
@@ -22,10 +22,11 @@
       p 企劃：金架海拉 (@<a href="https://twitter.com/HelaGoldfish">HelaGoldfish</a>)
       p 文案：呼嘯而過 (@<a href="https://twitter.com/WhizzingWind">WhizzingWind</a>)
       p 網站：linnil1(@<a href="https://twitter.com/1linnil1">linnil1</a>)
-      p BGM：虹の彼方に！－Cirycle remix by (@<a href="https://twitter.com/peter60507000">螺絲釘</a>)
-      p 所有祝賀 CI 醬的彩虹獨角獸
-  // cannot read .mp3 when put in assets (bug)
-  audio#audio(src="https://cirycle-2022-birthday.linnil1.me/api/image/cirycle_cover.mp3" type="audio/mp3" autoplay)
+      p BGM：虹の彼方に！－Cirycle remix by 螺絲釘 (@<a href="https://twitter.com/peter60507000">peter60507000</a>)
+      p 游標：yun (@<a href="https://twitter.com/mp678922">mp678922</a>)
+      p 感謝所有祝賀Cirycle的彩虹獨角獸
+  // data in public
+  audio#audio(src="/cirycle_cover.mp3" type="audio/mp3" autoplay)
 </template>
 
 <script setup>
@@ -48,6 +49,9 @@ function playMusic() {
   align-items: center
   justify-content: center
   overflow: hidden
+  cursor: url("~/assets/cursor_default.png"), auto
+  background-position-x: center
+  background-size: cover
 
   .full_screen
     @media only screen and (max-width: 1024px)
