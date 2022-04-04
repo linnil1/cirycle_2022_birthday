@@ -48,9 +48,10 @@ const props = defineProps({
       font-size: 10px
 
   img
-    max-height: 100%
-    width: auto
     opacity: 30%
+    width: 100%
+    // object-fit: contain
+    object-fit: cover
 
   &:hover
     border: 0px solid

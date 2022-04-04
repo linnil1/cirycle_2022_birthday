@@ -31,17 +31,23 @@ star_style = [  # total 55
     # (number of column in this row, row color)
     (1, 0),
     (1, 0),
+    (1, 0),
+    (1, 1),
     (1, 1),
     (3, 1),
     (3, 1),
+    (3, 2),
     (5, 2),
     (7, 2),
-    (13, 3),
+    (11, 3),
     (7, 4),
     (5, 4),
+    (3, 4),
     (3, 5),
     (3, 5),
     (1, 5),
+    (1, 5),
+    (1, 6),
     (1, 6),
     (1, 6),
 ]
@@ -92,13 +98,17 @@ def run(cmd):
     os.system(cmd)
 
 
+def updateKV(name, path):
+    run("wrangler kv:key put "
+        "--namespace-id=b90dbe1acf46420f908611387f0bcd08 "
+        f"{name} --path {path}")
+
+
 def uploadImgs(tweets):
     for tweet in tweets:
         if tweet['is_new']:
             name = tweet['my_img_file'].split("/")[-1]
-            run("wrangler kv:key put "
-                "--namespace-id=b90dbe1acf46420f908611387f0bcd08 "
-                f"{name} --path {image_folder}/{name}")
+            updateKV(name, f"{image_folder}/{name}")
 
 
 def index_to_pos_color(i):
@@ -131,7 +141,7 @@ def assignPosColorToTweet(tweets):
     i = 0
     tweets_simple_format = []
     for tweet in tweets:
-        if i >= 55:
+        if i >= sum(i[0] for i in star_style):
             continue
         # Exclude promotion tweets
         # Total tweets: 55. It's enough to fit the star
@@ -157,5 +167,4 @@ if __name__ == "__main__":
     pprint(tweets_star)
     json.dump(tweets_star, open(file_cirycle_db, "w"))
     uploadImgs(tweets)
-    run("wrangler kv:key put --namespace-id=b90dbe1acf46420f908611387f0bcd08 "
-        " tweets_cirycle.json --path tweets_cirycle.json")
+    updateKV("tweets_cirycle.json", "./tweets_cirycle.json")

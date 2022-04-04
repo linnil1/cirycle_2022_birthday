@@ -57,9 +57,9 @@ onMounted( () => {
   })
 
   // scale it if it can (maybe scale down)
-  const width_scale = (window.innerWidth - 100) / (total_width_max - total_width_min)
-  const height_scale = (window.innerHeight - 100) / total_height.value
-  scale.value = Math.min(width_scale, height_scale)
+  const width_scale = (window.innerWidth * 0.9) / (total_width_max - total_width_min)
+  const height_scale = (window.innerHeight * 0.9) / total_height.value
+  scale.value = Math.min(width_scale, 3)
   console.log("Set scale", scale.value)
   total_height.value = total_height.value * scale.value
 })
