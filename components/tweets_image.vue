@@ -41,7 +41,7 @@ function clickTwitter(evt, star) {
 
 let { data } = await useFetch("/api/tweets")
 let scale = ref(1)
-let total_height = ref(0)
+let total_height = ref(100)
 
 onMounted( () => {
   // get the width and height of the star
