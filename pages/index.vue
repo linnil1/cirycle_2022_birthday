@@ -17,7 +17,7 @@
       p 今天  的  十字星  是  ——
       p 集結  彩虹  獨角獸們  的  十字星  ！
       p 無論  在  什麼地方  ，  都能看見  虹彩  十字星  。
-    TweetsImage.tweetsimage
+    Star.tweetsimage
     .staff
       p 企劃：金架海拉 (@<a href="https://twitter.com/HelaGoldfish">HelaGoldfish</a>)
       p 文案：呼嘯而過 (@<a href="https://twitter.com/WhizzingWind">WhizzingWind</a>)

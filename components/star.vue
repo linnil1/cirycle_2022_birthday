@@ -1,61 +1,80 @@
 <template lang="pug">
-.image-container(:style='{top: star.x * scale + "px", left: 500 + (star.y - 500) * scale + "px", "background-color": star.color, "width": star.width * scale + "px", "height": star.height * scale + "px"}')
-  img(:src="star.image" @click="clickTwitter($event, star)")
-  .tip-container
-    .tip(@click="clickTwitter($event, star)") {{ star.user_name }}
+.canvas(:style='{height: total_height + "px"}')
+  Tweet(:star="star" :clickTwitter="clickTwitter" v-for="star in data" :scale="scale")
+  // v-if in child component will cause error
+  .lighthouse-container(v-if="twitter_display")
+    Lighthouse(:tweetid="twitter_id", :hideFunc="() => (twitter_display = false)")
 </template>
 
 <script setup>
-const props = defineProps({
-  'star': {
-    type: Object,
-    required: true,
-  },
-  'clickTwitter': {
-    type: Function,
-    required: true,
-  },
-  'scale': {
-    type: Number,
-    required: true,
-  },
+import { ref, onMounted } from 'vue'
+
+/*
+let data = ref([
+{
+  user_name: "nyadoi",
+  image: 'https://yt3.ggpht.com/ytc/AKedOLRbqG9InKSaB4NTjZ2OlKLFEooJC7sCJnsti6Sk=s176-c-k-c0x00ffffff-no-rj',
+  color: 'rgba(242, 72, 53, 0.5)',
+  x: 50,
+  y: 20,
+  twitter_id: "1504768347438981120"
+},
+{
+  user_name: "hela",
+  image: 'https://yt3.ggpht.com/BCj6J0qMsy84We512B-MWfzizJdAdln9ihvGCTokaLYswAGBhbQ0jiwYxtLOgNemoHilfzuNMA=s176-c-k-c0x00ffffff-no-rj',
+  color: 'rgba(242, 226, 53, 0.6)',
+  x: 150,
+  y: 30,
+  twitter_id: "1504516744739962880"
+},
+])
+*/
+
+let twitter_id = ref(""),
+    twitter_display = ref(false);
+
+function clickTwitter(evt, star) {
+  twitter_id.value = star.twitter_id.toString()
+  twitter_display.value = true
+  console.log(twitter_id)
+}
+
+let { data } = await useFetch("/api/tweets")
+let scale = ref(1)
+let total_height = ref(100)
+
+onMounted( () => {
+  console.log("mounted")
+  // get the width and height of the star
+  let total_width_min = 1000,
+      total_width_max = 0
+  data.value.forEach( (i) => {
+    if (i.height + i.x > total_height.value)
+      total_height.value = i.height + i.x
+    if (i.y < total_width_min)
+      total_width_min = i.y
+    if (i.y + i.width > total_width_max)
+      total_width_max = i.y + i.width
+  })
+
+  // scale it if it can (maybe scale down)
+  const width_scale = (window.innerWidth * 0.9) / (total_width_max - total_width_min)
+  const height_scale = (window.innerHeight * 0.9) / total_height.value
+  scale.value = Math.min(width_scale, 3)
+  console.log("Set scale", scale.value)
+  total_height.value = total_height.value * scale.value
 })
+
 </script>
 
 <style lang="stylus">
-.image-container
-  box-sizing: border-box
-  position: absolute
-  overflow: hidden
-  display: flex
-  justify-content: center
+.canvas
+  position: relative
+  width: 1000px
 
-  .tip-container
-    position: absolute
-    width: 100%
-    height: 100%
-    display: flex
-    justify-content: center
-    align-items: center
-
-    .tip
-      visibility: hidden
-      top: 40%
-      text-align: center
-      text-weight: 600
-      color: white
-      text-shadow: black 0 0 5px
-      font-size: 10px
-
-  img
-    opacity: 30%
-    width: 100%
-    // object-fit: contain
-    object-fit: cover
-
-  &:hover
-    border: 0px solid
-    .tip 
-      visibility: visible
+.lighthouse-container
+  position: fixed
+  top: 0px
+  left: 0px
 </style>
 
